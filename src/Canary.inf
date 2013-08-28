@@ -1,6 +1,6 @@
 name = FishyShield
 version = 0.0.2
 author = nosefish
-main-class = de.nosefish.fishyshield.FishyShield
+main-class = net.gmx.nosefish.fishyshield.FishyShield
 dependencies = FishyLib
 isLibrary = false
