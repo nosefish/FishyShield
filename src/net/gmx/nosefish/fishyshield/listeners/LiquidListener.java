@@ -35,8 +35,6 @@ public class LiquidListener implements PluginListener {
 		boolean isProtected = properties.getBoolean(world, Key.LIQUID_ENABLE)
 				&& properties.containsInteger(world, Key.LIQUID_BLOCKS, id);
 		if (isProtected) {
-			FishyShield.logger.logDebug("onLiquidDestroy protected a "
-					+ id);
 			hook.setCanceled();
 		}
 	}

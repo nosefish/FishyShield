@@ -1,6 +1,9 @@
 package net.gmx.nosefish.fishyshield.listeners;
 
 import net.gmx.nosefish.fishylib.properties.Properties;
+import net.canarymod.api.DamageSource;
+import net.canarymod.api.DamageType;
+import net.canarymod.api.entity.Entity;
 import net.canarymod.api.entity.living.humanoid.Player;
 import net.canarymod.api.world.World;
 import net.canarymod.hook.HookHandler;
@@ -37,51 +40,50 @@ public class EntityListener implements PluginListener {
 
 	@HookHandler
 	public void onHangingEntityDestroyed(HangingEntityDestroyHook hook) {
-		Player player = hook.getPlayer();
+		//TODO: mostly broken in Canary recode; test again when this issue is fixed
+		// https://github.com/FallenMoonNetwork/CanaryRecode/issues/71
+
 		World world = hook.getPainting().getWorld();
-		if (player == null) {
-			if (! properties.getBoolean(world, Key.ENTITY_HANGING_MOBDAMAGE)) {
-				hook.setCanceled();
-			}
+		DamageSource damageSource = hook.getDamageSource();
+
+		FishyShield.logger.logWarning("onHangingEntity called");
+		if (damageSource == null) {
+			// the block it's hanging on was destroyed
+			FishyShield.logger.logPluginDebug("HangingEntity destroyed: null source");
+			// TODO: we're allowing this, but should we?
+			return;
 		}
-		//Entity baseEntity = hook.
-		//World world = baseEntity.getWorld();
-		// only players may destroy paintings and item frames
-//		if (damageSource == null) {
-//			// the block it's hanging on was destroyed
-//			FishyShield.logDebug("HangingEntity destroyed: null source");
-//			return false;
-//		}
-//		if (damageSource.getSourceEntity() != null) {
-//			// damaged by an entity
-//			if (damageSource.getSourceEntity().isPlayer()) {
-//				// players may break it
-//				FishyShield.logDebug("HangingEntity destroyed by player "
-//						+ damageSource.getSourceEntity().getPlayer().getName());
-//				return false;
-//			} else if (!properties.getBoolean(world,
-//					Key.ENTITY_HANGING_MOBDAMAGE)) {
-//				// a mob damaged it, and it's protected
-//				FishyShield.logDebug("Destruction of HangingEntity by "
-//						+ damageSource.getName() + " blocked.");
-//				return true;
-//			}
-//		}
-//		if (damageSource.isExplosionDamage()
-//				&& properties.getBoolean(world, Key.EXPLOSION_ENABLE)
-//				&& !properties.getBoolean(world, Key.EXPLOSION_DAMAGEBLOCKS)) {
-//			FishyShield.logDebug("Destruction of HangingEntity by "
-//					+ damageSource.getName() + " blocked.");
-//			return true;
-//		}
-//		if (damageSource.isFireDamage()
-//				&& properties.getBoolean(world, Key.IGNITE_ENABLE)
-//				&& !properties.getBoolean(world, Key.IGNITE_DESTROY)) {
-//			FishyShield.logDebug("Destruction of HangingEntity by "
-//					+ damageSource.getName() + " blocked.");
-//			return true;
-//		}
-//		return false;
+		Entity damageSourceEntity = damageSource.getDamageDealer();
+
+		 // only players may destroy paintings and item frames
+		if (damageSourceEntity != null) {
+			// damaged by an entity
+			if (damageSourceEntity.isPlayer()) {
+				// players may break it
+				FishyShield.logger.logPluginDebug("HangingEntity destroyed by player "
+						+ ((Player)damageSourceEntity).getName());
+				return; //allow
+			} else if (!properties.getBoolean(world,
+					Key.ENTITY_HANGING_MOBDAMAGE)) {
+				// a mob damaged it, and it's protected
+				FishyShield.logger.logPluginDebug("Destruction of HangingEntity by "
+						+ damageSource.getNativeName() + " blocked.");
+				hook.setCanceled();
+				return;
+			}
+		} else if (damageSource.getDamagetype().equals(DamageType.EXPLOSION)
+				&& properties.getBoolean(world, Key.EXPLOSION_ENABLE)
+				&& !properties.getBoolean(world, Key.EXPLOSION_DAMAGEBLOCKS)) {
+			FishyShield.logger.logPluginDebug("Destruction of HangingEntity by "
+					+ damageSource.getNativeName() + " blocked.");
+			hook.setCanceled(); // block
+		}else if (damageSource.isFireDamage()
+				&& properties.getBoolean(world, Key.IGNITE_ENABLE)
+				&& !properties.getBoolean(world, Key.IGNITE_DESTROY)) {
+			FishyShield.logger.logPluginDebug("Destruction of HangingEntity by "
+					+ damageSource.getNativeName() + " blocked.");
+			hook.setCanceled(); // block
+		}
 	}
 
 }

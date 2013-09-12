@@ -1,5 +1,5 @@
 name = FishyShield
-version = 0.0.2
+version = 0.0.3
 author = nosefish
 main-class = net.gmx.nosefish.fishyshield.FishyShield
 dependencies = FishyLib

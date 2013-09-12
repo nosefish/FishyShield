@@ -4,7 +4,6 @@ package net.gmx.nosefish.fishyshield;
 import net.gmx.nosefish.fishylib.properties.Properties;
 
 import net.canarymod.Canary;
-import net.canarymod.logger.CanaryLevel;
 import net.canarymod.logger.Logman;
 import net.canarymod.plugin.Plugin;
 import net.canarymod.tasks.TaskOwner;
@@ -41,9 +40,6 @@ public class FishyShield extends Plugin implements TaskOwner {
 		logger = getLogman();
 		properties = new Properties(this);
 		properties.addMissingKeys(Key.getAllKeys());
-		if (properties.isDebug()) {
-			logger.setLevel(CanaryLevel.FINE);
-		}
 		registerListeners();
 		return true;
 	}
