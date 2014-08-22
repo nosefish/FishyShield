@@ -36,7 +36,7 @@ public class FireListener implements PluginListener {
 	/**
 	 * Constructor
 	 * 
-	 * @param fishyShield
+	 * @param plugin
 	 *            the plugin instantiating this <code>PluginListener</code>
 	 */
 	public FireListener(FishyShield plugin) {
@@ -53,12 +53,12 @@ public class FireListener implements PluginListener {
 		for (Block[] line : blocks) {
 			for (Block block : line) {
 				if (portalAllowed.contains(block.getLocation())) {
-					FishyShield.logger.logDebug("Portal creation allowed");
+					FishyShield.logger.debug("Portal creation allowed");
 					return;
 				}
 			}
 		}
-		FishyShield.logger.logDebug("Blocked portal creation");
+		FishyShield.logger.debug("Blocked portal creation");
 		hook.setCanceled();
 	}
 
@@ -92,7 +92,7 @@ public class FireListener implements PluginListener {
 			deny = blockFireballIgnite(block);
 			break;
 		default:
-			FishyShield.logger.logWarning("Unknown fire source blocked: " + hook.getCause());
+			FishyShield.logger.debug("Unknown fire source blocked: " + hook.getCause());
 			deny = true; // whatever other fire source there may be in the future, block it
 			break;
 		}
@@ -128,7 +128,7 @@ public class FireListener implements PluginListener {
 		World world = block.getWorld();
 		boolean denyPermission = false;
 		boolean denyFireproof = false;
-		FishyShield.logger.logDebug(player.getName() + " used flint&steel");
+		FishyShield.logger.debug(player.getName() + " used flint&steel");
 		if (properties.getBoolean(world, Key.IGNITE_FLINTANDSTEEL)) {
 			// flint&steel is allowed for everyone
 			if (fireIsOnFireproofBlock(block)) {
@@ -388,10 +388,10 @@ public class FireListener implements PluginListener {
 		if (!blockBelow.getType().equals(BlockType.Obsidian)) {
 			// fire is not on obsidian, this can't be an attempt to light a
 			// portal.
-			FishyShield.logger.logDebug("allowLightPortal: not on obby");
+			FishyShield.logger.debug("allowLightPortal: not on obby");
 			return;
 		}
-		FishyShield.logger.logDebug("Portal creation allowed.");
+		FishyShield.logger.debug("Portal creation allowed.");
 		final Location fireLocation = block.getLocation();
 		this.portalAllowed.add(fireLocation);
 		// remove from list after 500ms

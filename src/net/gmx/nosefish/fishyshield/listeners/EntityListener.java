@@ -46,10 +46,10 @@ public class EntityListener implements PluginListener {
 		World world = hook.getPainting().getWorld();
 		DamageSource damageSource = hook.getDamageSource();
 
-		FishyShield.logger.logWarning("onHangingEntity called");
+		FishyShield.logger.warn("onHangingEntity called");
 		if (damageSource == null) {
 			// the block it's hanging on was destroyed
-			FishyShield.logger.logPluginDebug("HangingEntity destroyed: null source");
+			FishyShield.logger.debug("HangingEntity destroyed: null source");
 			// TODO: we're allowing this, but should we?
 			return;
 		}
@@ -60,13 +60,13 @@ public class EntityListener implements PluginListener {
 			// damaged by an entity
 			if (damageSourceEntity.isPlayer()) {
 				// players may break it
-				FishyShield.logger.logPluginDebug("HangingEntity destroyed by player "
+				FishyShield.logger.debug("HangingEntity destroyed by player "
 						+ ((Player)damageSourceEntity).getName());
 				return; //allow
 			} else if (!properties.getBoolean(world,
 					Key.ENTITY_HANGING_MOBDAMAGE)) {
 				// a mob damaged it, and it's protected
-				FishyShield.logger.logPluginDebug("Destruction of HangingEntity by "
+				FishyShield.logger.debug("Destruction of HangingEntity by "
 						+ damageSource.getNativeName() + " blocked.");
 				hook.setCanceled();
 				return;
@@ -74,13 +74,13 @@ public class EntityListener implements PluginListener {
 		} else if (damageSource.getDamagetype().equals(DamageType.EXPLOSION)
 				&& properties.getBoolean(world, Key.EXPLOSION_ENABLE)
 				&& !properties.getBoolean(world, Key.EXPLOSION_DAMAGEBLOCKS)) {
-			FishyShield.logger.logPluginDebug("Destruction of HangingEntity by "
+			FishyShield.logger.debug("Destruction of HangingEntity by "
 					+ damageSource.getNativeName() + " blocked.");
 			hook.setCanceled(); // block
 		}else if (damageSource.isFireDamage()
 				&& properties.getBoolean(world, Key.IGNITE_ENABLE)
 				&& !properties.getBoolean(world, Key.IGNITE_DESTROY)) {
-			FishyShield.logger.logPluginDebug("Destruction of HangingEntity by "
+			FishyShield.logger.debug("Destruction of HangingEntity by "
 					+ damageSource.getNativeName() + " blocked.");
 			hook.setCanceled(); // block
 		}

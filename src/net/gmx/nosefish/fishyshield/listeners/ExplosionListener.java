@@ -49,7 +49,7 @@ public class ExplosionListener implements PluginListener {
 		Entity entity = hook.getEntity();
 		List<Block> blocksaffected = hook.getAffectedBlocks();
 		ExplosionType explosionType = ExplosionType.getExplosionType(entity);
-		FishyShield.logger.logDebug("Explosion: " + explosionType);
+		FishyShield.logger.debug("Explosion: " + explosionType);
 		switch (explosionType) {
 		case TNT:
 			onTNTExplosion(world, entity, blocksaffected);
