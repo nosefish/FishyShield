@@ -26,7 +26,7 @@ import net.gmx.nosefish.fishyshield.properties.Key;
  * 
  */
 public class EntityListener implements PluginListener {
-	private Properties properties;
+	private final Properties properties;
 
 	/**
 	 * Constructor
@@ -62,14 +62,13 @@ public class EntityListener implements PluginListener {
 				// players may break it
 				FishyShield.logger.debug("HangingEntity destroyed by player "
 						+ ((Player)damageSourceEntity).getName());
-				return; //allow
+				//allow
 			} else if (!properties.getBoolean(world,
 					Key.ENTITY_HANGING_MOBDAMAGE)) {
 				// a mob damaged it, and it's protected
 				FishyShield.logger.debug("Destruction of HangingEntity by "
 						+ damageSource.getNativeName() + " blocked.");
-				hook.setCanceled();
-				return;
+				hook.setCanceled(); // block
 			}
 		} else if (damageSource.getDamagetype().equals(DamageType.EXPLOSION)
 				&& properties.getBoolean(world, Key.EXPLOSION_ENABLE)

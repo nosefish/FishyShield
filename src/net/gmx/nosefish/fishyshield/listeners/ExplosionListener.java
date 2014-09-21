@@ -26,7 +26,7 @@ import net.gmx.nosefish.fishyshield.properties.Key;
  * 
  */
 public class ExplosionListener implements PluginListener {
-	private Properties properties;
+	private final Properties properties;
 
 	/**
 	 * Constructor
@@ -90,7 +90,7 @@ public class ExplosionListener implements PluginListener {
 		if (!properties.getBoolean(world, Key.EXPLOSION_DAMAGEBLOCKS)) {
 			if (properties.getBoolean(world, Key.EXPLOSION_CASCADETNT)) {
 				// allow cascading TNT explosions
-				List<Block> tntBlocks = new LinkedList<Block>();
+				List<Block> tntBlocks = new LinkedList<>();
 				for (Block affectedBlock : blocksaffected) {
 					if (affectedBlock.getType().equals(BlockType.Tnt)) {
 						tntBlocks.add(affectedBlock);
@@ -136,7 +136,7 @@ public class ExplosionListener implements PluginListener {
 		if (!properties.getBoolean(world, Key.EXPLOSION_DAMAGEBLOCKS)) {
 			// Air blocks stay affected to allow fireballs to start fires and
 			// let FS_IgniteListener handle that.
-			List<Block> airBlocks = new LinkedList<Block>();
+			List<Block> airBlocks = new LinkedList<>();
 			for (Block affectedBlock : blocksaffected) {
 					if (affectedBlock.getType().equals(BlockType.Air)) {
 						airBlocks.add(affectedBlock);

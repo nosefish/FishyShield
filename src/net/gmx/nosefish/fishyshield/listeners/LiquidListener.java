@@ -15,7 +15,7 @@ import net.gmx.nosefish.fishyshield.properties.Key;
  * 
  */
 public class LiquidListener implements PluginListener {
-	private Properties properties;
+	private final Properties properties;
 
 	/**
 	 * Constructor

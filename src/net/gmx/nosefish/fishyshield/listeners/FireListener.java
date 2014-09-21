@@ -28,10 +28,10 @@ import net.gmx.nosefish.fishyshield.properties.Key;
  */
 public class FireListener implements PluginListener {
 
-	private Properties properties;
+	private final Properties properties;
 
-	private Set<Location> portalAllowed;
-	private FishyShield plugin;
+	private final Set<Location> portalAllowed;
+	private final FishyShield plugin;
 
 	/**
 	 * Constructor
@@ -42,7 +42,7 @@ public class FireListener implements PluginListener {
 	public FireListener(FishyShield plugin) {
 		this.plugin = plugin;
 		this.properties = plugin.getProperties();
-		this.portalAllowed = new HashSet<Location>(16, 0.9F);
+		this.portalAllowed = new HashSet<>(16, 0.9F);
 	}
 
 	@HookHandler
@@ -68,7 +68,7 @@ public class FireListener implements PluginListener {
 		if (!properties.getBoolean(block.getWorld(), Key.IGNITE_ENABLE)) {
 			return;
 		}
-		boolean deny = true;
+		boolean deny;
 		switch (hook.getCause()) {
 		case LAVA:
 			deny = blockLavaIgnite(block);
@@ -126,8 +126,8 @@ public class FireListener implements PluginListener {
 	 */
 	private boolean blockFlintAndSteelIgnite(Block block, Player player) {
 		World world = block.getWorld();
-		boolean denyPermission = false;
-		boolean denyFireproof = false;
+		boolean denyPermission;
+		boolean denyFireproof;
 		FishyShield.logger.debug(player.getName() + " used flint&steel");
 		if (properties.getBoolean(world, Key.IGNITE_FLINTANDSTEEL)) {
 			// flint&steel is allowed for everyone
@@ -345,16 +345,18 @@ public class FireListener implements PluginListener {
 		final int[][] offsets = {{1,0,0},{-1,0,0},{0,0,1},{0,0,-1}};
 		for (int[] offset : offsets) {
 			fireBlock = block.getRelative(offset[0], offset[1], offset[2]);
-			belowFireBlock = fireBlock.getRelative(0, -1, 0);
-			if (fireBlock != null && belowFireBlock != null) {
-				if (fireBlock.getTypeId() == FIRE && belowFireBlock.getTypeId() == AIR) {
-					// Yes, I know this won't extinguish blocks on level 0.
-					// There shouldn't be a flammable block at level 0 anyway,
-					// so I don't care.
-					fireBlock.setType(BlockType.Air);
-					fireBlock.update();
-				}
-			}
+            if (fireBlock != null) {
+                belowFireBlock = fireBlock.getRelative(0, -1, 0);
+                if (belowFireBlock != null) {
+                    if (fireBlock.getTypeId() == FIRE && belowFireBlock.getTypeId() == AIR) {
+                        // Yes, I know this won't extinguish blocks on level 0.
+                        // There shouldn't be a flammable block at level 0 anyway,
+                        // so I don't care.
+                        fireBlock.setType(BlockType.Air);
+                        fireBlock.update();
+                    }
+                }
+            }
 		}
 	}
 	
